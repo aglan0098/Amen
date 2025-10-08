@@ -1,0 +1,33 @@
+<div class="flex relative min-h-screen flex-row-reverse">
+ 
+
+  <!-- Main Area -->
+  <div 
+    class="flex-1 flex flex-col transition-all duration-300"
+    [class.lg:pr-64]="isSidebarOpen()">
+
+    <app-navbar></app-navbar>
+
+    <main class="flex-1 p-5">
+      <router-outlet></router-outlet>
+    </main>
+
+    <app-footer></app-footer>
+  </div>
+
+   <!-- Sidebar -->
+  <aside 
+    [class.translate-x-0]="isSidebarOpen()" 
+    [class.translate-x-full]="!isSidebarOpen()"
+    class="fixed lg:relative right-0 top-0 h-full w-64 bg-gray-800 text-white transition-transform duration-300 z-50">
+    
+    <app-sidebar></app-sidebar>
+
+    <!-- زرار toggle على border (يبقى ناحية الشمال دلوقتي) -->
+    <button 
+      (click)="toggleSidebar()"
+      class="absolute -left-5 top-5 bg-gray-700 p-2 rounded-full text-white">
+      ☰
+    </button>
+  </aside>
+</div>

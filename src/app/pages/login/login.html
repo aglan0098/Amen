@@ -1,0 +1,14 @@
+<div class="login-page">
+  <form (ngSubmit)="login()" [formGroup]="form" class="card">
+    <h2>Sign in</h2>
+
+    <label>Email<br/><input formControlName="email" /></label>
+    <div class="error" *ngIf="form.controls['email'].invalid && form.controls['email'].touched">Valid email required</div>
+
+    <label>Password<br/><input type="password" formControlName="password" /></label>
+    <div class="error" *ngIf="form.controls['password'].invalid && form.controls['password'].touched">Password required</div>
+
+    <button type="submit" [disabled]="loading">Login</button>
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </form>
+</div>

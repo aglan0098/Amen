@@ -1,0 +1,9 @@
+<h1>Users</h1>
+
+<div *ngIf="users$ | async as users; else loading">
+  <app-generic-table [columns]="columns" [data]="users"></app-generic-table>
+</div>
+
+<ng-template #loading>
+  <p>Loading users...</p>
+</ng-template>

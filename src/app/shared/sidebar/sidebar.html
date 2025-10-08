@@ -1,0 +1,8 @@
+<nav class="side-nav">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+    >Dashboard</a
+  >
+  <a routerLink="/users" routerLinkActive="active">Users</a>
+  <a routerLink="/settings" routerLinkActive="active">Settings</a>
+  <a (click)="logout()" class="logout">Logout</a>
+</nav>

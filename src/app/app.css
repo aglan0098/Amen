@@ -1,0 +1,9 @@
+/* src/app/app.css - أي ستايل عام تحطه هنا */
+:root {
+  font-family: Inter, system-ui, sans-serif;
+}
+body,
+html {
+  height: 100%;
+  margin: 0;
+}
