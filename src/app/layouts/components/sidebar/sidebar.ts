@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../core/auth.service';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, MatIconModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })

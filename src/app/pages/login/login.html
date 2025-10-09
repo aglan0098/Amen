@@ -46,32 +46,33 @@
             class="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl text-right"
             dir="auto"
           >
-            CHEFANO أهلا بك في
+            نظام آمن
           </h1>
 
-          <p class="mt-4 leading-relaxed text-gray-500">حيث النكهات الرائعة والفن الشهي!</p>
+          <p class="mt-4 leading-relaxed text-gray-500">المديرية العامة للسجون</p>
         </div>
 
         <!-- FORM (مرتبط بالـ TS الموجود عندك) -->
-        <div dir="ltr" class="mt-10 lg:mt-0">
+        <div class="mt-10 lg:mt-0">
           <form
             [formGroup]="form"
             (ngSubmit)="login()"
             class="space-y-6 bg-white p-8 rounded-xl shadow-lg max-w-md mx-auto"
             novalidate
           >
-            <h2 class="text-2xl font-semibold text-gray-900">Sign in</h2>
+            <h2 class="text-2xl font-semibold text-gray-900">تسجيل الدخول</h2>
 
             <!-- Email -->
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-4"
+                >البريد الإلكتروني</label
+              >
               <div class="mt-1">
                 <input
                   id="email"
                   type="email"
                   formControlName="email"
                   class="block w-full rounded-md border border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm px-3 py-2"
-                  placeholder="you@example.com"
                   autocomplete="email"
                   aria-invalid="{{ form.controls['email'].invalid ? 'true' : 'false' }}"
                 />
@@ -80,20 +81,21 @@
                 class="mt-2 text-sm text-red-600"
                 *ngIf="form.controls['email'].invalid && form.controls['email'].touched"
               >
-                Valid email required
+                من فضلك قم بإدخال إيميل صحيح
               </p>
             </div>
 
             <!-- Password -->
             <div>
-              <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+              <label for="password" class="block text-sm font-medium text-gray-700 mb-4"
+                >الرقم السري</label
+              >
               <div class="mt-1">
                 <input
                   id="password"
                   type="password"
                   formControlName="password"
                   class="block w-full rounded-md border border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm px-3 py-2"
-                  placeholder="Password"
                   autocomplete="current-password"
                   aria-invalid="{{ form.controls['password'].invalid ? 'true' : 'false' }}"
                 />
@@ -102,7 +104,7 @@
                 class="mt-2 text-sm text-red-600"
                 *ngIf="form.controls['password'].invalid && form.controls['password'].touched"
               >
-                Password required
+                هذا الحقل مطلوب
               </p>
             </div>
 
@@ -114,8 +116,8 @@
                 [disabled]="loading"
                 aria-busy="{{ loading }}"
               >
-                <span *ngIf="!loading">Login</span>
-                <span *ngIf="loading">Logging in...</span>
+                <span *ngIf="!loading">دخول</span>
+                <span *ngIf="loading">جاري تسجبل الدخول</span>
               </button>
             </div>
 

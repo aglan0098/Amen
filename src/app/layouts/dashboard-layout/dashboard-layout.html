@@ -10,7 +10,7 @@
   <!-- Sidebar -->
   <aside
     [ngClass]="isSidebarOpen() ? openSidebarClasses : closedSidebarClasses"
-    class="h-full bg-gray-800 text-white transition-transform duration-300 z-50 flex-shrink-0"
+    class="h-full text-white transition-transform duration-300 z-50 flex-shrink-0"
     role="complementary"
     aria-label="Sidebar"
   >
@@ -19,7 +19,7 @@
     <!-- Toggle Button -->
     <button
       (click)="toggleSidebar()"
-      class="absolute -left-5 top-5 bg-gray-700 p-2 rounded-full text-white shadow"
+      class="absolute -left-5 top-5 bg-main p-2 rounded-full text-white cursor-pointer"
       title="Toggle sidebar"
     >
       ☰

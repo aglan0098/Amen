@@ -1,9 +1,9 @@
 import { Component, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Sidebar } from '../../shared/sidebar/sidebar';
-import { Navbar } from '../../shared/navbar/navbar';
-import { Footer } from '../../shared/footer/footer';
+import { Sidebar } from '../components/sidebar/sidebar';
+import { Navbar } from '../components/navbar/navbar';
+import { Footer } from '../components/footer/footer';
 
 @Component({
   selector: 'app-dashboard-layout',

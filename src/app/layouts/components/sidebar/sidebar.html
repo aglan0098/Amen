@@ -1,0 +1,41 @@
+<div class="h-screen text-gray-800 bg-gray-50 border-l-4 border-gray-100">
+  <div class="header py-10 px-3 text-center">
+    <h2 class="text-2xl font-bold">المديرية العامة للسجون</h2>
+    <h2 class="my-3 text-xl">التقنية والذكاء الاصطناعي</h2>
+    <h3 class="text-2xl font-bold">نظام آمن</h3>
+  </div>
+  <nav class="side-nav flex flex-col px-5 space-y-5 text-lg">
+    <a
+      routerLink="/"
+      routerLinkActive="active"
+      class="flex items-center gap-3"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-icon>home</mat-icon>الرئيسية</a
+    >
+    <a routerLink="/users" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>home</mat-icon>
+      المستخدمين</a
+    >
+    <a routerLink="/visitors" routerLinkActive="active" class="flex items-center gap-3"
+      ><mat-icon>home</mat-icon> الزائرين</a
+    >
+    <a routerLink="/contracts" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>home</mat-icon>العقود</a
+    >
+    <a routerLink="/reviewers" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>home</mat-icon>المراجعين</a
+    >
+    <a routerLink="/externals" routerLinkActive="active" class="flex items-center gap-3"
+      ><mat-icon>home</mat-icon>المنسوبين من الخارج</a
+    >
+    <a routerLink="/all" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>home</mat-icon>حركة الدخول والخروج</a
+    >
+    <a
+      (click)="logout()"
+      class="logout bg-red-500 px-4 py-2 rounded-2xl text-white text-xl text-center mx-5 w-auto cursor-pointer absolute bottom-5"
+      >تسجيل الخروج</a
+    >
+  </nav>
+</div>

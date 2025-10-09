@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GenericTable } from '../../../shared/generic-table/generic-table';
+import { GenericTable } from '../../../shared/table/generic-table/generic-table';
 import { ApiService } from '../../../core/api.service';
 import { Observable } from 'rxjs';
 
