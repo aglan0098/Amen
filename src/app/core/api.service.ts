@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { MOCK_USERS } from '../mock-data/mock-users';
+import { MOCK_USERS } from '../mock/mock-users';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {

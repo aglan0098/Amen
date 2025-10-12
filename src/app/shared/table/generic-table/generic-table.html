@@ -1,12 +1,41 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th *ngFor="let col of columns">{{ col.label }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let row of data">
-      <td *ngFor="let col of columns">{{ row[col.key] }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="border border-gray-100 rounded-xl shadow-md p-5 mx-3 mt-7">
+  <div class="flex justify-between items-center mb-5">
+    <app-search-input [value]="search" (valueChange)="onSearch($event)"></app-search-input>
+
+    <button
+      *ngIf="showCreateButton"
+      (click)="create.emit()"
+      class="py-3 px-10 bg-main text-white rounded-lg cursor-pointer"
+    >
+      إضافة
+    </button>
+  </div>
+
+  <ng-container *ngIf="isLoading; else loaded">
+    <div class="p-4">جارٍ التحميل...</div>
+  </ng-container>
+
+  <ng-template #loaded>
+    <ng-container *ngIf="data$ | async as data; else errBlock">
+      <app-table [columns]="columns" [rows]="data.data"></app-table>
+
+      <div *ngIf="isFetching && !isLoading" class="text-sm mt-2">تحديث...</div>
+
+      <div class="mt-4">
+        <div class="mb-2">إجمالي السجلات: {{ data.recordsFiltered || data.recordsTotal || 0 }}</div>
+
+        <app-pagination
+          [currentPage]="page"
+          [totalPages]="
+            Math.max(1, Math.ceil((data.recordsFiltered || data.recordsTotal || 0) / pageSize))
+          "
+          (pageChange)="onPageChange($event)"
+        ></app-pagination>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #errBlock>
+    <div class="text-red-500 mt-3">حدث خطأ أثناء جلب البيانات</div>
+  </ng-template>
+</div>

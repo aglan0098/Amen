@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Column } from '../../../models/table.model';
 
 @Component({
   selector: 'app-table',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './table.html',
-  styleUrl: './table.css'
 })
-export class Table {
+export class TableComponent {
+  @Input() columns: Column[] = [];
+  @Input() rows: any[] = [];
 
+  // Each column may optionally carry a TemplateRef (passed by parent via columns array)
 }

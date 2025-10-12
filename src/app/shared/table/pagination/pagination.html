@@ -1,1 +1,54 @@
-<p>pagination works!</p>
+<div class="flex items-center justify-center mt-5 gap-1 flex-wrap">
+  <div class="flex gap-1">
+    <button
+      class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
+      (click)="pageChange.emit(1)"
+      [disabled]="currentPage === 1"
+    >
+      ⏭
+    </button>
+    <button
+      class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
+      (click)="pageChange.emit(currentPage - 1)"
+      [disabled]="currentPage === 1"
+    >
+      ▶
+    </button>
+  </div>
+
+  <div class="flex gap-1 px-4">
+    <ng-container *ngFor="let page of getVisiblePages(); let idx = index">
+      <ng-container *ngIf="idx > 0 && page - getVisiblePages()[idx - 1] > 1">
+        <span class="px-2">...</span>
+      </ng-container>
+      <button
+        class="px-3 py-1 rounded-lg"
+        [ngClass]="
+          currentPage === page
+            ? 'bg-main text-white'
+            : 'bg-gray-200 hover:bg-gray-300 cursor-pointer'
+        "
+        (click)="pageChange.emit(page)"
+      >
+        {{ page }}
+      </button>
+    </ng-container>
+  </div>
+
+  <div class="flex gap-1">
+    <button
+      class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
+      (click)="pageChange.emit(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+    >
+      ◀
+    </button>
+    <button
+      class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
+      (click)="pageChange.emit(totalPages)"
+      [disabled]="currentPage === totalPages"
+    >
+      ⏮
+    </button>
+  </div>
+</div>
