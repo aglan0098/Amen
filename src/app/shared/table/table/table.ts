@@ -11,6 +11,4 @@ import { Column } from '../../../models/table.model';
 export class TableComponent {
   @Input() columns: Column[] = [];
   @Input() rows: any[] = [];
-
-  // Each column may optionally carry a TemplateRef (passed by parent via columns array)
 }

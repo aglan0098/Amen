@@ -8,12 +8,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-input',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIconModule],
   templateUrl: './search.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,38 +1,39 @@
 <div class="border border-gray-100 rounded-xl shadow-md p-5 mx-3 mt-7">
-  <div class="flex justify-between items-center mb-5">
-    <app-search-input [value]="search" (valueChange)="onSearch($event)"></app-search-input>
+  <div class="flex justify-between items-center gap-4 mb-5">
+    <app-search-input
+      [value]="search"
+      (valueChange)="onSearch($event)"
+      class="w-full sm:w-1/2 md:w-2/5 lg:w-1/4"
+    ></app-search-input>
 
     <button
       *ngIf="showCreateButton"
       (click)="create.emit()"
-      class="py-3 px-10 bg-main text-white rounded-lg cursor-pointer"
+      class="py-3 px-10 text-xl bg-main text-white rounded-lg cursor-pointer"
     >
       إضافة
     </button>
   </div>
 
-  <ng-container *ngIf="isLoading; else loaded">
-    <div class="p-4">جارٍ التحميل...</div>
+  <ng-container *ngIf="data$ | async as data; else loading">
+    <app-table [columns]="columns" [rows]="data.data"></app-table>
+    <div *ngIf="isFetching && !isLoading" class="text-sm mt-2">تحديث...</div>
+
+    <div class="mt-4">
+      <div class="mb-2">إجمالي السجلات: {{ data.recordsFiltered || data.recordsTotal || 0 }}</div>
+
+      <app-pagination
+        [currentPage]="page"
+        [totalPages]="
+          Math.max(1, Math.ceil((data.recordsFiltered || data.recordsTotal || 0) / pageSize))
+        "
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
+    </div>
   </ng-container>
 
-  <ng-template #loaded>
-    <ng-container *ngIf="data$ | async as data; else errBlock">
-      <app-table [columns]="columns" [rows]="data.data"></app-table>
-
-      <div *ngIf="isFetching && !isLoading" class="text-sm mt-2">تحديث...</div>
-
-      <div class="mt-4">
-        <div class="mb-2">إجمالي السجلات: {{ data.recordsFiltered || data.recordsTotal || 0 }}</div>
-
-        <app-pagination
-          [currentPage]="page"
-          [totalPages]="
-            Math.max(1, Math.ceil((data.recordsFiltered || data.recordsTotal || 0) / pageSize))
-          "
-          (pageChange)="onPageChange($event)"
-        ></app-pagination>
-      </div>
-    </ng-container>
+  <ng-template #loading>
+    <div class="p-4">جارٍ التحميل...</div>
   </ng-template>
 
   <ng-template #errBlock>

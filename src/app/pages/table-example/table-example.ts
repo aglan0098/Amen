@@ -4,12 +4,13 @@ import { mockData } from '../../mock/mock-data';
 import { ApiMockService } from '../../services/api-mock.service';
 import { GenericTableComponent } from '../../shared/table/generic-table/generic-table';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 // ستستخدم modals محلياً (بدون مكتبة خارجية) — simple overlay
 @Component({
   selector: 'app-table-example',
   standalone: true,
-  imports: [CommonModule, GenericTableComponent],
+  imports: [CommonModule, GenericTableComponent, MatIconModule],
   templateUrl: './table-example.html',
 })
 export class TableExample {
@@ -30,7 +31,7 @@ export class TableExample {
     this.columns = [
       { key: 'name', label: 'الأسم' },
       { key: 'location', label: 'المنظقة' },
-      { key: 'actions', label: '#', template: this.actionsTemplate }, // NOTE: TemplateRef assigned after view init
+      { key: 'actions', label: 'اتخاذ إجراء', template: this.actionsTemplate }, // NOTE: TemplateRef assigned after view init
     ];
   }
 

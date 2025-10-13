@@ -84,6 +84,4 @@ export class GenericTableComponent {
     this.page = page;
     this.params$.next({ page: this.page, pageSize: this.pageSize, search: this.search });
   }
-
-  // helper to expose current latest values (component template will subscribe via async)
 }

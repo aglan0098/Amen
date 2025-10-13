@@ -1,13 +1,10 @@
 <div
-  class="bg-gray-100 border border-gray-200 rounded-2xl p-2 w-full sm:w-1/4 flex items-center gap-1 justify-between"
+  class="bg-gray-100 border border-gray-200 rounded-2xl p-2 w-full flex items-center gap-1 justify-between"
 >
-  <!-- icon: use any svg or package -->
-  <svg class="text-2xl w-6 h-6" viewBox="0 0 24 24" fill="none">
-    <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" />
-  </svg>
+  <mat-icon>search</mat-icon>
   <input
     [formControl]="control"
     [placeholder]="placeholder"
-    class="h-6 w-full px-3 focus:outline-0 bg-transparent"
+    class="h-6 w-full p-3 focus:outline-0 bg-transparent text-xl text-gray-600"
   />
 </div>

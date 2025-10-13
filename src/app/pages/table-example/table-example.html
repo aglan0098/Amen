@@ -10,34 +10,29 @@
 <!-- actions template to be used by table -->
 <ng-template #actionsTemplate let-row="row">
   <div class="flex justify-center items-center gap-4">
-    <div class="relative">
-      <div
-        class="relative py-3 px-5 rounded-2xl bg-gray-100 cursor-pointer hover:bg-second transition flex items-center gap-2"
-        (click)="openMenuId = openMenuId === (row.id ?? row._id) ? null : row.id ?? row._id"
-      >
-        اتخاذ اجراء
-        <!-- chevron icon -->
-      </div>
+    <!-- تعديل -->
+    <button
+      class="p-2 bg-blue-400 text-white rounded-xl cursor-pointer flex items-center"
+      (click)="formDialog = { type: 'edit', data: row }"
+    >
+      <mat-icon>remove_red_eye</mat-icon>
+    </button>
 
-      <!-- Popup -->
-      <div
-        *ngIf="openMenuId === (row.id ?? row._id)"
-        class="absolute z-50 left-1/2 transform -translate-x-1/2 top-full mt-2 bg-white border rounded-xl shadow-xl p-4 flex gap-3"
-      >
-        <button
-          class="py-2 px-4 bg-yellow-600 text-white rounded-xl"
-          (click)="formDialog = { type: 'edit', data: row }; openMenuId = null"
-        >
-          تعديل
-        </button>
-        <button
-          class="py-2 px-4 bg-red-500 text-white rounded-xl"
-          (click)="deleteId = row.id ?? row._id; openMenuId = null"
-        >
-          حذف
-        </button>
-      </div>
-    </div>
+    <!-- تعديل -->
+    <button
+      class="p-2 bg-yellow-600 text-white rounded-xl cursor-pointer flex items-center"
+      (click)="formDialog = { type: 'edit', data: row }"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <!-- حذف -->
+    <button
+      class="p-2 bg-red-500 text-white rounded-xl cursor-pointer flex items-center"
+      (click)="deleteId = row.id ?? row._id"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
   </div>
 </ng-template>
 
