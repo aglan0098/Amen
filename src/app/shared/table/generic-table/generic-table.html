@@ -9,7 +9,7 @@
     <button
       *ngIf="showCreateButton"
       (click)="create.emit()"
-      class="py-3 px-10 text-xl bg-main text-white rounded-lg cursor-pointer"
+      class="py-3 px-10 text-lg bg-main text-white rounded-lg cursor-pointer"
     >
       إضافة
     </button>
@@ -20,7 +20,12 @@
     <div *ngIf="isFetching && !isLoading" class="text-sm mt-2">تحديث...</div>
 
     <div class="mt-4">
-      <div class="mb-2">إجمالي السجلات: {{ data.recordsFiltered || data.recordsTotal || 0 }}</div>
+      <div class="mb-2 text-lg">
+        إجمالي السجلات:
+        <span class="bg-main text-white font-bold px-2 rounded-full">
+          {{ data.recordsFiltered || data.recordsTotal || 0 }}</span
+        >
+      </div>
 
       <app-pagination
         [currentPage]="page"
@@ -33,10 +38,12 @@
   </ng-container>
 
   <ng-template #loading>
-    <div class="p-4">جارٍ التحميل...</div>
+    <div class="text-main p-5 mt-10 text-2xl font-bold text-center">جارٍ التحميل...</div>
   </ng-template>
 
   <ng-template #errBlock>
-    <div class="text-red-500 mt-3">حدث خطأ أثناء جلب البيانات</div>
+    <div class="text-red-500 p-5 mt-10 text-2xl font-bold text-center">
+      حدث خطأ أثناء جلب البيانات
+    </div>
   </ng-template>
 </div>

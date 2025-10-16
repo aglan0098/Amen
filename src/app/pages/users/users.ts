@@ -1,26 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../../core/api.service';
-import { Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { Column } from '../../models/table.model';
+// table component
 import { GenericTableComponent } from '../../shared/table/generic-table/generic-table';
+// data
+import { mockData } from '../../mock/mock-data';
+import { ApiMockService } from '../../services/api-mock.service';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  // imports: [CommonModule, GenericTableComponent],
+  imports: [CommonModule, GenericTableComponent, MatIconModule],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
 export class Users {
-  // columns = [
-  //   { key: 'id', label: 'ID' },
-  //   { key: 'name', label: 'Name' },
-  //   { key: 'email', label: 'Email' },
-  // ];
+  @ViewChild('actionsTemplate', { static: true }) actionsTemplate!: TemplateRef<any>;
 
-  // users$: Observable<any[]>;
+  columns: Column[] = [];
+  mockData = mockData;
 
-  // constructor(private api: ApiService) {
-  //   this.users$ = this.api.getUsers(); // observable cached in ApiService
-  // }
+  // UI state
+  openMenuId: string | number | null = null;
+  formDialog: null | { type: 'create' | 'edit'; data?: any } = null;
+  deleteId: string | number | null = null;
+
+  constructor(private apiMock: ApiMockService) {}
+
+  ngAfterViewInit() {
+    this.columns = [
+      { key: 'id', label: 'رقم' },
+      { key: 'location', label: 'رقم الهوية' },
+      { key: 'name', label: 'الأسم' },
+      { key: 'email', label: 'الإيميل' },
+      { key: 'actions', label: 'اتخاذ إجراء', template: this.actionsTemplate },
+    ];
+  }
+
+  // handlers for create/edit/delete will call API (here we use mock)
+  onCreate() {
+    this.formDialog = { type: 'create' };
+    this.openMenuId = null;
+  }
+
+  // ... implement create/edit/delete using apiMock or real api
 }

@@ -9,13 +9,13 @@ import { mockData } from '../../mock/mock-data';
 import { ApiMockService } from '../../services/api-mock.service';
 
 @Component({
-  selector: 'app-externals',
+  selector: 'app-roles',
   standalone: true,
   imports: [CommonModule, GenericTableComponent, MatIconModule],
-  templateUrl: './externals.html',
-  styleUrl: './externals.css',
+  templateUrl: './roles.html',
+  styleUrl: './roles.css',
 })
-export class Externals {
+export class Roles {
   @ViewChild('actionsTemplate', { static: true }) actionsTemplate!: TemplateRef<any>;
 
   columns: Column[] = [];
@@ -31,14 +31,8 @@ export class Externals {
   ngAfterViewInit() {
     this.columns = [
       { key: 'id', label: 'رقم' },
-      { key: 'nationalID', label: 'رقم الهوية' },
-      { key: 'name', label: 'الأسم' },
-      { key: 'phone', label: 'رقم الهاتف' },
-      { key: 'prison', label: 'اسم السجن' },
-      { key: 'area', label: 'اسم المنطقة' },
-      { key: 'area', label: 'القطاع' },
-      { key: 'start', label: 'تاريخ بداية التكليف' },
-      { key: 'end', label: 'تاريخ نهاية التكليف' },
+      { key: 'name', label: 'الدور' },
+      { key: 'area', label: 'الصلاحيات' },
       { key: 'actions', label: 'اتخاذ إجراء', template: this.actionsTemplate },
     ];
   }

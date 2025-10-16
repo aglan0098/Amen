@@ -7,13 +7,15 @@ import { firstValueFrom, delay } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ApiMockService {
   // simulate server-side filtering + paging; returns Promise<TableResponse>
-  async fetch(params: { page:number; pageSize:number; search:string }): Promise<TableResponse> {
+  async fetch(params: { page: number; pageSize: number; search: string }): Promise<TableResponse> {
     const q = (params.search || '').trim().toLowerCase();
     const all = mockData.data;
     const filtered = q
-      ? all.filter(item =>
-          Object.values(item).some(v =>
-            String(v || '').toLowerCase().includes(q)
+      ? all.filter((item) =>
+          Object.values(item).some((v) =>
+            String(v || '')
+              .toLowerCase()
+              .includes(q)
           )
         )
       : all;
@@ -22,13 +24,12 @@ export class ApiMockService {
     const pageRows = filtered.slice(start, start + params.pageSize);
 
     // simulate delay
-    await new Promise(r => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 250));
 
     return {
-      draw: mockData.draw,
       data: pageRows,
       recordsTotal: mockData.recordsTotal,
-      recordsFiltered
+      recordsFiltered,
     };
   }
 }

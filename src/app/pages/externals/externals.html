@@ -1,1 +1,191 @@
-<p>externals works!</p>
+<h2 class="bg-main text-white text-2xl font-bold text-center py-3 rounded-2xl mb-14">
+  المنسوبين من الخارج
+</h2>
+
+<app-generic-table
+  [mockData]="mockData"
+  [columns]="columns"
+  queryKey="externals"
+  [showCreateButton]="true"
+  (create)="onCreate()"
+>
+</app-generic-table>
+
+<!-- actions template to be used by table -->
+<ng-template #actionsTemplate let-row="row">
+  <div class="flex justify-center items-center gap-4">
+    <!-- تعديل -->
+    <button
+      class="p-2 bg-blue-400 text-white rounded-xl cursor-pointer flex items-center"
+      (click)="formDialog = { type: 'edit', data: row }"
+    >
+      <mat-icon>remove_red_eye</mat-icon>
+    </button>
+
+    <!-- تعديل -->
+    <button
+      class="p-2 bg-second text-white rounded-xl cursor-pointer flex items-center"
+      (click)="formDialog = { type: 'edit', data: row }"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <!-- حذف -->
+    <button
+      class="p-2 bg-red-500 text-white rounded-xl cursor-pointer flex items-center"
+      (click)="deleteId = row.id ?? row._id"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</ng-template>
+
+<!-- Create/Edit Dialog -->
+<div *ngIf="formDialog" class="fixed inset-0 z-50 flex items-center justify-center">
+  <!-- overlay -->
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true"></div>
+
+  <!-- content -->
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-xl shadow-xl w-auto min-w-[400px] max-h-[90%] overflow-auto scrollbar-hide relative z-10"
+    >
+      <!-- header -->
+      <div class="flex justify-between items-center border-b p-5 mb-5 bg-second text-white">
+        <h3 class="text-xl font-semibold">
+          {{ formDialog.type === 'edit' ? 'تعديل بيانات المنسوب' : 'إضافة منسوب' }}
+        </h3>
+        <button
+          (click)="formDialog = null"
+          class="text-2xl leading-none cursor-pointer hover:opacity-75"
+          aria-label="إغلاق"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- form -->
+      <form class="flex flex-col gap-4 px-10 py-7">
+        <div class="md:flex gap-5 md:mb-3">
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg"> الأسم<span class="text-red-500 mr-2">*</span></label>
+            <input
+              name="directrate"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.directrate ?? ''"
+            />
+          </div>
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg">
+              الجنسية<span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="email"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.email ?? ''"
+            />
+          </div>
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg"
+              >رقم الهاتف<span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="name"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.name ?? ''"
+            />
+          </div>
+        </div>
+
+        <div class="md:flex gap-5 md:mb-3">
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg"
+              >اسم المنطقة<span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="location"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.location ?? ''"
+            />
+          </div>
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg">
+              اسم السجن<span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="email"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.email ?? ''"
+            />
+          </div>
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg"
+              >اسم الجهة<span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="name"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.name ?? ''"
+            />
+          </div>
+        </div>
+
+        <div class="md:flex gap-5 md:mb-3">
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg">
+              تاريخ بداية التكليف <span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="phone"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.phone ?? ''"
+            />
+          </div>
+
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg">
+              تاريخ نهاية التكليف <span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="area"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="formDialog.data?.area ?? ''"
+            />
+          </div>
+        </div>
+      </form>
+
+      <!-- action buttons -->
+      <div class="flex justify-center gap-5 p-5 sticky bottom-0 bg-white border-t">
+        <button class="text-lg px-4 py-2 rounded bg-main text-white cursor-pointer">
+          {{ formDialog.type === 'edit' ? 'تحديث' : 'إضافة' }}
+        </button>
+
+        <button
+          type="button"
+          (click)="formDialog = null"
+          class="text-lg px-4 py-2 rounded bg-gray-400 text-white cursor-pointer"
+        >
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirmation -->
+<div *ngIf="deleteId" class="fixed inset-0 z-50 flex items-center justify-center">
+  <div class="fixed inset-0 bg-black/50"></div>
+  <div class="bg-white rounded-xl shadow-xl w-auto p-7 z-10 min-w-[400px]">
+    <p class="mb-7 text-xl font-bold text-center">هل أنت متأكد من الحذف؟</p>
+    <div class="flex justify-center items-center gap-5 text-lg">
+      <button class="px-4 py-2 rounded bg-red-600 text-white cursor-pointer">متأكد</button>
+      <button
+        class="px-4 py-2 rounded bg-gray-500 text-white cursor-pointer"
+        (click)="deleteId = null"
+      >
+        إلغاء
+      </button>
+    </div>
+  </div>
+</div>

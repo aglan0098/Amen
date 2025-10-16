@@ -1,6 +1,6 @@
 <section class="bg-white">
   <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
-    <!-- left image / intro -->
+    <!-- left section -->
     <section class="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
       <img
         alt="login background"
@@ -26,7 +26,7 @@
       </div>
     </section>
 
-    <!-- right: form -->
+    <!-- right section (form) -->
     <main
       class="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
     >
@@ -39,7 +39,7 @@
             aria-label="Home"
           >
             <span class="sr-only">Home</span>
-            <!-- SVG removed -->
+            <!-- LOGO -->
           </a>
 
           <h1
@@ -52,7 +52,7 @@
           <p class="mt-4 leading-relaxed text-gray-500">المديرية العامة للسجون</p>
         </div>
 
-        <!-- FORM (مرتبط بالـ TS الموجود عندك) -->
+        <!-- FORM (connected with TS) -->
         <div class="mt-10 lg:mt-0">
           <form
             [formGroup]="form"
@@ -62,32 +62,32 @@
           >
             <h2 class="text-2xl font-semibold text-gray-900">تسجيل الدخول</h2>
 
-            <!-- Email -->
+            <!-- UserName -->
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-4"
-                >البريد الإلكتروني</label
-              >
+              <label for="userName" class="block text-xl font-medium text-gray-700 mb-4">
+                اسم المستخدم
+              </label>
               <div class="mt-1">
                 <input
-                  id="email"
-                  type="email"
-                  formControlName="email"
+                  id="userName"
+                  type="text"
+                  formControlName="userName"
                   class="block w-full rounded-md border border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm px-3 py-2"
-                  autocomplete="email"
-                  aria-invalid="{{ form.controls['email'].invalid ? 'true' : 'false' }}"
+                  autocomplete="username"
+                  aria-invalid="{{ form.controls['userName'].invalid ? 'true' : 'false' }}"
                 />
               </div>
               <p
-                class="mt-2 text-sm text-red-600"
-                *ngIf="form.controls['email'].invalid && form.controls['email'].touched"
+                class="mt-2 text-lg text-red-600"
+                *ngIf="form.controls['userName'].invalid && form.controls['userName'].touched"
               >
-                من فضلك قم بإدخال إيميل صحيح
+                من فضلك أدخل اسم المستخدم
               </p>
             </div>
 
             <!-- Password -->
             <div>
-              <label for="password" class="block text-sm font-medium text-gray-700 mb-4"
+              <label for="password" class="block text-xl font-medium text-gray-700 mb-4"
                 >الرقم السري</label
               >
               <div class="mt-1">
@@ -101,7 +101,7 @@
                 />
               </div>
               <p
-                class="mt-2 text-sm text-red-600"
+                class="mt-2 text-lg text-red-600"
                 *ngIf="form.controls['password'].invalid && form.controls['password'].touched"
               >
                 هذا الحقل مطلوب
@@ -112,7 +112,7 @@
             <div>
               <button
                 type="submit"
-                class="inline-flex w-full items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                class="inline-flex w-full items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-lg text-white hover:bg-indigo-700 disabled:opacity-50"
                 [disabled]="loading"
                 aria-busy="{{ loading }}"
               >

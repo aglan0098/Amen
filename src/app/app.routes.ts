@@ -10,6 +10,8 @@ import { Contracts } from './pages/contracts/contracts';
 import { Reviewers } from './pages/reviewers/reviewers';
 import { Externals } from './pages/externals/externals';
 import { All } from './pages/all/all';
+import { Roles } from './pages/roles/roles';
+import { Reports } from './pages/reports/reports';
 import { TableExample } from './pages/table-example/table-example';
 
 export const routes: Routes = [
@@ -26,6 +28,8 @@ export const routes: Routes = [
       { path: 'reviewers', component: Reviewers },
       { path: 'externals', component: Externals },
       { path: 'all', component: All },
+      { path: 'roles', component: Roles },
+      { path: 'reports', component: Reports },
       { path: 'exapmle', component: TableExample },
     ],
   },

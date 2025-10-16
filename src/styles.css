@@ -1,6 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+
 @import 'tailwindcss';
 
 @theme inline {
   --color-main: #b68c31;
+  --color-second: #c4a35a;
+  --font-cairo: 'Cairo', sans-serif;
+}
+
+body {
+  font-family: var(--font-cairo);
 }

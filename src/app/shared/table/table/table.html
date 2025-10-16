@@ -1,8 +1,8 @@
 <div class="overflow-x-auto rounded-xl">
   <table class="min-w-full divide-y-2 divide-gray-200 border border-gray-200 text-sm">
-    <thead class="bg-second">
-      <tr class="*:text-gray-700 divide-x divide-gray-200">
-        <th *ngFor="let col of columns" class="px-3 py-4 whitespace-nowrap text-center">
+    <thead class="bg-second text-lg">
+      <tr class="*:text-white divide-x divide-gray-200">
+        <th *ngFor="let col of columns" class="p-3 whitespace-nowrap text-center">
           {{ col.label }}
         </th>
       </tr>
@@ -10,14 +10,22 @@
 
     <tbody class="divide-y divide-gray-200">
       <tr *ngIf="rows.length === 0">
-        <td [attr.colspan]="columns.length" class="p-4 text-center">لا توجد نتائج</td>
+        <td [attr.colspan]="columns.length" class="p-10 text-center text-xl font-bold">
+          لا توجد نتائج
+        </td>
       </tr>
 
-      <tr *ngFor="let row of rows; let i = index" [attr.key]="row.id ?? i"
-          class="*:text-gray-900 divide-x divide-gray-200 text-center">
+      <tr
+        *ngFor="let row of rows; let i = index"
+        [attr.key]="row.id ?? i"
+        [ngClass]="{ 'bg-gray-100': i % 2 === 0 }"
+        class="*:text-gray-900 divide-x divide-gray-200 text-center"
+      >
         <td *ngFor="let col of columns" class="p-3 whitespace-nowrap">
           <ng-container *ngIf="col.template; else defaultCell">
-            <ng-container *ngTemplateOutlet="col.template; context: { $implicit: row, row: row }"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="col.template; context: { $implicit: row, row: row }"
+            ></ng-container>
           </ng-container>
 
           <ng-template #defaultCell>{{ row[col.key] ?? '' }}</ng-template>

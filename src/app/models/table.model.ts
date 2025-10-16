@@ -6,7 +6,6 @@ export interface Column {
 }
 
 export interface TableResponse {
-  draw?: number;
   data: any[];
   recordsTotal: number;
   recordsFiltered?: number;

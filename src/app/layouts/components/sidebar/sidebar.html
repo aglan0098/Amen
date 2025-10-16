@@ -11,27 +11,33 @@
       class="flex items-center gap-3"
       [routerLinkActiveOptions]="{ exact: true }"
     >
-      <mat-icon>home</mat-icon>الرئيسية</a
-    >
+      <mat-icon>home</mat-icon>الرئيسية
+    </a>
     <a routerLink="/users" routerLinkActive="active" class="flex items-center gap-3">
-      <mat-icon>home</mat-icon>
-      المستخدمين</a
-    >
-    <a routerLink="/visitors" routerLinkActive="active" class="flex items-center gap-3"
-      ><mat-icon>home</mat-icon> الزائرين</a
-    >
+      <mat-icon>groups</mat-icon> المستخدمين
+    </a>
+    <a routerLink="/visitors" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>emoji_people</mat-icon> الزائرين
+    </a>
     <a routerLink="/contracts" routerLinkActive="active" class="flex items-center gap-3">
-      <mat-icon>home</mat-icon>العقود</a
-    >
+      <mat-icon>document_scanners</mat-icon> العقود
+    </a>
     <a routerLink="/reviewers" routerLinkActive="active" class="flex items-center gap-3">
-      <mat-icon>home</mat-icon>المراجعين</a
-    >
-    <a routerLink="/externals" routerLinkActive="active" class="flex items-center gap-3"
-      ><mat-icon>home</mat-icon>المنسوبين من الخارج</a
-    >
+      <mat-icon>how_to_reg</mat-icon> المراجعين
+    </a>
+    <a routerLink="/externals" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>assignment_ind</mat-icon> المنسوبين من الخارج
+    </a>
     <a routerLink="/all" routerLinkActive="active" class="flex items-center gap-3">
-      <mat-icon>home</mat-icon>حركة الدخول والخروج</a
-    >
+      <mat-icon>compare_arrows</mat-icon> حركة الدخول والخروج
+    </a>
+    <h2 class="text-xl text-gray-600 font-bold m-5">إدارة النظام</h2>
+    <a routerLink="/roles" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>compare_arrows</mat-icon> الصلاحيات
+    </a>
+    <a routerLink="/reports" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>compare_arrows</mat-icon> التقارير
+    </a>
     <a
       (click)="logout()"
       class="logout bg-red-500 px-4 py-2 rounded-2xl text-white text-xl text-center mx-5 w-auto cursor-pointer absolute bottom-5"

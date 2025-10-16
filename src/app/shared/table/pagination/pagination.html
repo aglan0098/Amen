@@ -16,7 +16,7 @@
     </button>
   </div>
 
-  <div class="flex gap-1 px-4">
+  <div class="flex gap-1 px-4 text-lg">
     <ng-container *ngFor="let page of getVisiblePages(); let idx = index">
       <ng-container *ngIf="idx > 0 && page - getVisiblePages()[idx - 1] > 1">
         <span class="px-2">...</span>

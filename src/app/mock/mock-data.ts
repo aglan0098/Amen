@@ -1,7 +1,6 @@
 import { TableResponse } from '../models/table.model';
 
-export const mockData: TableResponse & { draw?: number } = {
-  draw: 1,
+export const mockData: TableResponse = {
   recordsTotal: 7,
   recordsFiltered: 7,
   data: [

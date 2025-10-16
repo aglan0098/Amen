@@ -1,11 +1,9 @@
-<h2 class="bg-main text-white text-2xl font-bold text-center py-3 rounded-2xl mb-14">
-  قائمة المراجعين
-</h2>
+<h2 class="bg-main text-white text-2xl font-bold text-center py-3 rounded-2xl mb-14">الصلاحيات</h2>
 
 <app-generic-table
   [mockData]="mockData"
   [columns]="columns"
-  queryKey="reviewers"
+  queryKey="roles"
   [showCreateButton]="true"
   (create)="onCreate()"
 >
@@ -53,7 +51,7 @@
       <!-- header -->
       <div class="flex justify-between items-center border-b p-5 mb-5 bg-second text-white">
         <h3 class="text-xl font-semibold">
-          {{ formDialog.type === 'edit' ? 'تعديل بيانات المراجع' : 'إضافة مراجع' }}
+          {{ formDialog.type === 'edit' ? 'تعديل الدور' : 'إضافة دور' }}
         </h3>
         <button
           (click)="formDialog = null"
@@ -68,19 +66,8 @@
       <form class="flex flex-col gap-4 px-10 py-7">
         <div class="md:flex gap-5 md:mb-3">
           <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg"> الأسم<span class="text-red-500 mr-2">*</span></label>
-            <input
-              name="directrate"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.directrate ?? ''"
-            />
-          </div>
-        </div>
-
-        <div class="md:flex gap-5 md:mb-3">
-          <div class="mb-4 md:mb-0 w-full">
             <label class="block mb-2 text-lg"
-              >رقم الهوية<span class="text-red-500 mr-2">*</span></label
+              >اسم الدور<span class="text-red-500 mr-2">*</span></label
             >
             <input
               name="location"
@@ -88,53 +75,11 @@
               [value]="formDialog.data?.location ?? ''"
             />
           </div>
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              الجنسية<span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="email"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.email ?? ''"
-            />
-          </div>
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg"
-              >رقم الهاتف<span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="name"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.name ?? ''"
-            />
-          </div>
         </div>
-
         <div class="md:flex gap-5 md:mb-3">
           <div class="mb-4 md:mb-0 w-full">
             <label class="block mb-2 text-lg">
-              اسم المنطقة<span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="phone"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.phone ?? ''"
-            />
-          </div>
-
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              اسم السجن <span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="area"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.area ?? ''"
-            />
-          </div>
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              اسم الإدارة <span class="text-red-500 mr-2">*</span></label
+              الصلاحيات<span class="text-red-500 mr-2">*</span></label
             >
             <input
               name="email"

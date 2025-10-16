@@ -6,7 +6,6 @@ import { GenericTableComponent } from '../../shared/table/generic-table/generic-
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
-// ستستخدم modals محلياً (بدون مكتبة خارجية) — simple overlay
 @Component({
   selector: 'app-table-example',
   standalone: true,
