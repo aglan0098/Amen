@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, TemplateRef, OnDestroy } from '@angular/core';
 import { TableDataService } from '../../../services/table-data.service';
 import { ApiMockService } from '../../../services/api-mock.service';
+import { ApiService } from '../../../services/api.service';
 import { Column, TableResponse } from '../../../models/table.model';
-import { Observable, BehaviorSubject, switchMap, startWith, tap } from 'rxjs';
+import { Observable, BehaviorSubject, switchMap, tap, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 // components
@@ -16,9 +17,8 @@ import { PaginationComponent } from '../pagination/pagination';
   imports: [CommonModule, SearchInputComponent, TableComponent, PaginationComponent],
   templateUrl: './generic-table.html',
 })
-export class GenericTableComponent {
+export class GenericTableComponent implements OnDestroy {
   Math = Math;
-
   @Input() mockData: any = null;
   @Input() columns: Column[] = [];
   @Input() queryKey = '';
@@ -29,6 +29,7 @@ export class GenericTableComponent {
   }) => Promise<TableResponse> | Observable<TableResponse>;
   @Input() pageSize = 10;
   @Input() showCreateButton = false;
+  @Input() endpoints?: { list: string; create?: string; update?: string; delete?: string };
   @Output() create = new EventEmitter<void>();
 
   // state
@@ -41,22 +42,30 @@ export class GenericTableComponent {
   isFetching = false;
   error: any = null;
 
-  // internal trigger for params
   private params$ = new BehaviorSubject({ page: 1, pageSize: this.pageSize, search: '' });
+  private subs = new Subscription();
 
-  constructor(private tableData: TableDataService, private apiMock: ApiMockService) {}
+  constructor(
+    private tableData: TableDataService,
+    private apiMock: ApiMockService,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit() {
-    // Observable pipeline that calls tableData.get(...) whenever params change
+    // default pipeline: when params change -> call tableData.get(...)
     this.data$ = this.params$.pipe(
       tap(() => {
-        // set fetching state; but if first load, leave isLoading true
         this.isFetching = true;
         this.error = null;
       }),
       switchMap((params) => {
-        const fetcher = this.queryFn ? this.queryFn : (p: any) => this.apiMock.fetch(p);
-        // keepPreviousData behavior: we won't wipe previous data synchronously because data$ is continuous
+        const fetcher = this.queryFn
+          ? this.queryFn
+          : this.endpoints?.list
+          ? (p: any) => this.apiService.fetchListFromEndpoint(this.endpoints!.list, p)
+          : (p: any) => this.apiMock.fetch(p);
+
+        // by default do not force reload here (force is handled when reload broadcast arrives)
         return this.tableData.get(this.queryKey, params, fetcher);
       }),
       tap(() => {
@@ -64,6 +73,41 @@ export class GenericTableComponent {
         this.isFetching = false;
       })
     );
+
+    // subscribe to tableData.reload$ to force reload when somebody invalidates the queryKey
+    const reloadSub = this.tableData.reload$.subscribe((key) => {
+      if (!this.queryKey) return;
+      if (key === this.queryKey) {
+        // force a refetch of the current params (bypass cache)
+        const current = this.params$.value;
+        // call get with force=true by pushing into a dedicated pipeline:
+        this.isFetching = true;
+        const fetcher = this.queryFn
+          ? this.queryFn
+          : this.endpoints?.list
+          ? (p: any) => this.apiService.fetchListFromEndpoint(this.endpoints!.list, p)
+          : (p: any) => this.apiMock.fetch(p);
+
+        // directly call tableData.get with force option and subscribe to update cache/data flow
+        const obs = this.tableData.get(this.queryKey, current, fetcher, { force: true });
+
+        // subscribe once and ignore value because data$ observable will pick up cached result on next params$.next
+
+        const s = obs.subscribe({
+          next: (res) => {
+            // update states; to ensure UI sees new data, push same params to params$ to retrigger data$ pipeline
+
+            this.params$.next({ ...current });
+          },
+          error: (err) => {
+            this.isFetching = false;
+            this.error = err;
+          },
+        });
+        this.subs.add(s);
+      }
+    });
+    this.subs.add(reloadSub);
   }
 
   // called by SearchInput (with debounce)
@@ -83,5 +127,14 @@ export class GenericTableComponent {
     if (page < 1) return;
     this.page = page;
     this.params$.next({ page: this.page, pageSize: this.pageSize, search: this.search });
+  }
+  public reloadCurrentParams() {
+    const current = this.params$.value;
+    // call invalidate on same queryKey to trigger reload pipeline elsewhere if needed
+    this.params$.next({ ...current });
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }

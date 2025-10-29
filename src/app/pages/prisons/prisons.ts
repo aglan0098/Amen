@@ -8,13 +8,13 @@ import { GenericTableComponent } from '../../shared/table/generic-table/generic-
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-roles',
+  selector: 'app-prisons',
   standalone: true,
   imports: [CommonModule, GenericTableComponent, MatIconModule],
-  templateUrl: './roles.html',
-  styleUrl: './roles.css',
+  templateUrl: './prisons.html',
+  styleUrl: './prisons.css',
 })
-export class Roles implements OnInit {
+export class Prisons implements OnInit {
   @ViewChild('actionsTemplate', { static: true }) actionsTemplate!: TemplateRef<any>;
   @ViewChild('genericTableComp', { static: false }) genericTableComp!: GenericTableComponent;
 
@@ -28,134 +28,84 @@ export class Roles implements OnInit {
   // result dialog for success/fail messages
   resultDialog: null | { title: string; message: string; type?: 'success' | 'error' } = null;
 
-  // endpoints
+  // endpoints for this page
   endpoints = {
-    list: '/Roles/GetAll',
-    create: '/Roles/Create',
-    update: '/Roles/Update',
-    delete: '/Roles/Delete',
+    list: '/Prisons/GetAll',
+    create: '/Prisons/Create',
+    update: '/Prisons/Update',
+    delete: '/Prisons/Delete',
   };
 
-  // claims related
-  allClaims: Array<{ value: string; display: string }> = [];
-  selectedClaims: Array<{ value: string; display: string }> = [];
-  claimsDropdownOpen = false;
+  // adminstrations
+  regions: Array<{ name: string; id: string }> = [];
 
   constructor(private api: ApiService, private tableData: TableDataService) {}
 
   ngOnInit() {
     this.columns = [
       { key: 'id', label: 'رقم' },
-      { key: 'name', label: 'الدور' },
-      { key: 'claims', label: 'الصلاحيات' },
+      { key: 'name', label: 'اسم السجن' },
+      { key: 'regionId', label: 'المنطقة' },
       { key: 'actions', label: 'اتخاذ إجراء', template: this.actionsTemplate },
     ];
 
-    this.fetchClaims();
+    this.fetchRegions();
   }
 
-  // fetch all claims
-  async fetchClaims() {
+  // fetch all administrations for deopdown
+  async fetchRegions() {
     try {
-      const res = await firstValueFrom(this.api.getFromEndpoint<any>('/Roles/GetAllClaims'));
-      this.allClaims = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
-    } catch (err) {
-      console.error('fetchClaims failed (GET)', err);
-
-      try {
-        const postRes = await firstValueFrom(
-          this.api.postToEndpoint<any>('/Roles/GetAllClaims', null)
-        );
-        this.allClaims = Array.isArray(postRes)
-          ? postRes
-          : Array.isArray(postRes?.data)
-          ? postRes.data
-          : [];
-      } catch (err2) {
-        console.error('fetchClaims fallback failed', err2);
-        this.allClaims = [];
+      const res = await firstValueFrom(
+        this.api.fetchListFromEndpoint('/Regions/GetAll', {
+          page: 1,
+          pageSize: 100,
+          search: '',
+        })
+      );
+      if (res?.data) {
+        this.regions = res.data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+        }));
       }
+    } catch (error) {
+      console.error('Error fetching regions', error);
     }
   }
 
-  // open create dialog
+  // create button handler (يفتح الفورم)
   onCreate() {
-    this.selectedClaims = [];
     this.formDialog = { type: 'create' };
     this.openMenuId = null;
   }
 
-  // open edit dialog with current data
+  // فتح نافذة التعديل مع البيانات الحالية
   openEdit(row: any) {
+    // normalize data to match form fields
     const data = {
       id: row.id ?? row._id,
       name: row.name,
-      claims: row.claims ?? [],
+      regionId: row.regionId,
     };
-
-    // تحويل claims الموجودة إلى objects مع عرض مناسب
-    if (Array.isArray(data.claims)) {
-      this.selectedClaims = data.claims.map((c: any) => {
-        if (typeof c === 'string') {
-          const found = this.allClaims.find((ac) => ac.value === c);
-          return found ?? { value: c, display: c };
-        } else if (c && c.value) {
-          return c;
-        } else {
-          return { value: String(c), display: String(c) };
-        }
-      });
-    } else {
-      this.selectedClaims = [];
-    }
-
     this.formDialog = { type: 'edit', data };
   }
 
-  // ============ claims selection logic ========
-  // dropdown helpers
-  toggleDropdown() {
-    this.claimsDropdownOpen = !this.claimsDropdownOpen;
-  }
-
-  isSelected(claim: { value: string; display: string }) {
-    return this.selectedClaims.some((c) => c.value === claim.value);
-  }
-
-  toggleClaim(claim: { value: string; display: string }) {
-    const idx = this.selectedClaims.findIndex((c) => c.value === claim.value);
-    if (idx === -1) {
-      this.selectedClaims.push(claim);
-    } else {
-      this.selectedClaims.splice(idx, 1);
-    }
-  }
-
-  removeClaim(index: number) {
-    this.selectedClaims.splice(index, 1);
-  }
-
-  // handle submit
+  // handle submit: نأخذ الـ event.target كـ HTMLFormElement
   async submitForm(ev: Event) {
     ev.preventDefault();
     const formEl = ev.target as HTMLFormElement;
     if (!formEl) return;
 
     const fd = new FormData(formEl);
-    const nameVal = String(fd.get('name') ?? '');
-
     // build payload matching API contract
     const payload: any = {
-      name: nameVal,
-      claims: this.selectedClaims.map((c) => c.value),
+      name: String(fd.get('name') ?? fd.get('name') ?? ''),
+      regionId: String(fd.get('regionId') ?? fd.get('regionId') ?? ''),
     };
 
+    // if editing, include id
     if (this.formDialog?.type === 'edit') {
       payload.id = this.formDialog.data?.id;
-      payload.newName = payload.name;
-      payload.newClaims = payload.claims;
-      delete payload.name;
-      delete payload.claims;
     }
 
     try {
@@ -164,7 +114,7 @@ export class Roles implements OnInit {
         if (res?.isSuccess) {
           this.resultDialog = {
             title: 'تمت الإضافة',
-            message: 'تم إضافة الدور بنجاح',
+            message: 'تم إضافة السجن بنجاح',
             type: 'success',
           };
         } else {
@@ -179,7 +129,7 @@ export class Roles implements OnInit {
         if (res?.isSuccess) {
           this.resultDialog = {
             title: 'تم التحديث',
-            message: 'تم تحديث بيانات الدور',
+            message: 'تم تحديث بيانات السجن',
             type: 'success',
           };
         } else {
@@ -197,17 +147,15 @@ export class Roles implements OnInit {
         type: 'error',
       };
     } finally {
-      // close form and reload table
+      // أغلق الفورم، امسح الكاش وأعد تحميل الجدول
       this.formDialog = null;
-      this.tableData.invalidate('roles');
+      this.tableData.invalidate('prisons');
+      // reload table if موجود
       try {
         this.genericTableComp?.reloadCurrentParams();
       } catch (e) {}
+      // auto hide result after 2.5s
       setTimeout(() => (this.resultDialog = null), 2500);
-
-      // reset selection to avoid carry-over next time
-      this.selectedClaims = [];
-      this.claimsDropdownOpen = false;
     }
   }
 
@@ -234,7 +182,7 @@ export class Roles implements OnInit {
       };
     } finally {
       this.deleteId = null;
-      this.tableData.invalidate('roles');
+      this.tableData.invalidate('prisons');
       setTimeout(() => (this.resultDialog = null), 2500);
     }
   }

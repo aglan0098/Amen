@@ -1,5 +1,7 @@
-<div class="h-screen text-gray-800 bg-gray-50 border-l-4 border-gray-100">
+<div class="text-gray-800 border-l-4 border-gray-100">
   <div class="header py-10 px-3 text-center">
+    <img class="m-auto h-fit w-[120px] mb-2" src="../../../../images/logo.png" alt="" />
+
     <h2 class="text-2xl font-bold">المديرية العامة للسجون</h2>
     <h2 class="my-3 text-xl">التقنية والذكاء الاصطناعي</h2>
     <h3 class="text-2xl font-bold">نظام آمن</h3>
@@ -22,6 +24,9 @@
     <a routerLink="/contracts" routerLinkActive="active" class="flex items-center gap-3">
       <mat-icon>document_scanners</mat-icon> العقود
     </a>
+    <a routerLink="/contractors" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>document_scanners</mat-icon> المتعاقدين
+    </a>
     <a routerLink="/reviewers" routerLinkActive="active" class="flex items-center gap-3">
       <mat-icon>how_to_reg</mat-icon> المراجعين
     </a>
@@ -31,17 +36,25 @@
     <a routerLink="/all" routerLinkActive="active" class="flex items-center gap-3">
       <mat-icon>compare_arrows</mat-icon> حركة الدخول والخروج
     </a>
-    <h2 class="text-xl text-gray-600 font-bold m-5">إدارة النظام</h2>
+    <h2 class="text-xl text-gray-600 font-bold m-3">إدارة المناطق</h2>
+    <a routerLink="/administration" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>compare_arrows</mat-icon> الإدارات
+    </a>
+    <a routerLink="/regions" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>compare_arrows</mat-icon> المناطق
+    </a>
+    <a routerLink="/prisons" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>compare_arrows</mat-icon> السجون
+    </a>
+    <a routerLink="/gates" routerLinkActive="active" class="flex items-center gap-3">
+      <mat-icon>compare_arrows</mat-icon> البوابات
+    </a>
+    <h2 class="text-xl text-gray-600 font-bold m-3">إدارة النظام</h2>
     <a routerLink="/roles" routerLinkActive="active" class="flex items-center gap-3">
       <mat-icon>compare_arrows</mat-icon> الصلاحيات
     </a>
     <a routerLink="/reports" routerLinkActive="active" class="flex items-center gap-3">
       <mat-icon>compare_arrows</mat-icon> التقارير
     </a>
-    <a
-      (click)="logout()"
-      class="logout bg-red-500 px-4 py-2 rounded-2xl text-white text-xl text-center mx-5 w-auto cursor-pointer absolute bottom-5"
-      >تسجيل الخروج</a
-    >
   </nav>
 </div>

@@ -3,8 +3,9 @@
 </h2>
 
 <app-generic-table
-  [mockData]="mockData"
+  #genericTableComp
   [columns]="columns"
+  [endpoints]="endpoints"
   queryKey="users"
   [showCreateButton]="true"
   (create)="onCreate()"
@@ -14,10 +15,11 @@
 <!-- actions template to be used by table -->
 <ng-template #actionsTemplate let-row="row">
   <div class="flex justify-center items-center gap-4">
-    <!-- تعديل -->
     <button
       class="p-2 bg-blue-400 text-white rounded-xl cursor-pointer flex items-center"
-      (click)="formDialog = { type: 'edit', data: row }"
+      (click)="openEdit(row)"
+      aria-label="عرض"
+      title="عرض / تفاصيل"
     >
       <mat-icon>remove_red_eye</mat-icon>
     </button>
@@ -25,7 +27,9 @@
     <!-- تعديل -->
     <button
       class="p-2 bg-second text-white rounded-xl cursor-pointer flex items-center"
-      (click)="formDialog = { type: 'edit', data: row }"
+      (click)="openEdit(row)"
+      aria-label="تعديل"
+      title="تعديل"
     >
       <mat-icon>edit</mat-icon>
     </button>
@@ -34,6 +38,8 @@
     <button
       class="p-2 bg-red-500 text-white rounded-xl cursor-pointer flex items-center"
       (click)="deleteId = row.id ?? row._id"
+      aria-label="حذف"
+      title="حذف"
     >
       <mat-icon>delete</mat-icon>
     </button>
@@ -65,16 +71,17 @@
       </div>
 
       <!-- form -->
-      <form class="flex flex-col gap-4 px-10 py-7">
+      <form class="flex flex-col gap-4 px-10 py-7" (submit)="submitForm($event)">
         <div class="md:flex gap-5 md:mb-3">
           <div class="mb-4 md:mb-0 w-full">
             <label class="block mb-2 text-lg"
               >رقم الهوية <span class="text-red-500 mr-2">*</span></label
             >
             <input
-              name="name"
+              name="nationalId"
               class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.name ?? ''"
+              [value]="formDialog.data?.nationalId ?? ''"
+              required
             />
           </div>
 
@@ -83,95 +90,78 @@
               >اسم المستخدم <span class="text-red-500 mr-2">*</span></label
             >
             <input
-              name="location"
+              name="userName"
               class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.location ?? ''"
+              [value]="formDialog.data?.userName ?? ''"
+              required
             />
           </div>
+
           <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              البريد الإلكتروني <span class="text-red-500 mr-2">*</span></label
+            <label class="block mb-2 text-lg"
+              >البريد الإلكتروني <span class="text-red-500 mr-2">*</span></label
             >
             <input
               name="email"
+              type="email"
               class="w-full border border-main p-2 rounded outline-0"
               [value]="formDialog.data?.email ?? ''"
+              required
             />
           </div>
         </div>
 
         <div class="md:flex gap-5 md:mb-3">
+          <!-- password: في تعديل يمكن تركها فارغة إذا مش هيتغير -->
           <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              رقم الجوال <span class="text-red-500 mr-2">*</span></label
+            <label class="block mb-2 text-lg"
+              >كلمة المرور <span class="text-gray-400 mr-2">(اختياري للتعديل)</span></label
             >
             <input
-              name="phone"
+              name="password"
+              type="password"
               class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.phone ?? ''"
+              placeholder="{{ formDialog.type === 'edit' ? 'اتركها إن لم تغير كلمة المرور' : '' }}"
+            />
+          </div>
+
+          <!-- roles (كمثال نصي: نص/CSV أو multi-select حسب تطبيقك) -->
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg"
+              >الصلاحيات (roleIds) <span class="text-red-500 mr-2">*</span></label
+            >
+            <input
+              name="roleIds"
+              class="w-full border border-main p-2 rounded outline-0"
+              [value]="(formDialog.data?.roles || []).join(',')"
             />
           </div>
 
           <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              اسم المنطقة <span class="text-red-500 mr-2">*</span></label
-            >
+            <label class="block mb-2 text-lg">claims (اختياري)</label>
             <input
-              name="area"
+              name="claims"
               class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.area ?? ''"
-            />
-          </div>
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              اسم السجن <span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="email"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.email ?? ''"
+              [value]="(formDialog.data?.claims || []).join(',')"
             />
           </div>
         </div>
 
-        <div class="md:flex gap-5 md:mb-3">
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              اسم الإدارة <span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="directrate"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.directrate ?? ''"
-            />
-          </div>
-          <div class="mb-4 md:mb-0 w-full">
-            <label class="block mb-2 text-lg">
-              الصلاحيات<span class="text-red-500 mr-2">*</span></label
-            >
-            <input
-              name="permissions"
-              class="w-full border border-main p-2 rounded outline-0"
-              [value]="formDialog.data?.permissions ?? ''"
-            />
-          </div>
+        <!-- action buttons -->
+        <div class="flex justify-center gap-5 p-5 sticky bottom-0 bg-white border-t">
+          <button type="submit" class="text-lg px-4 py-2 rounded bg-main text-white cursor-pointer">
+            {{ formDialog.type === 'edit' ? 'تحديث' : 'إضافة' }}
+          </button>
+
+          <button
+            type="button"
+            (click)="formDialog = null"
+            class="text-lg px-4 py-2 rounded bg-gray-400 text-white cursor-pointer"
+          >
+            إلغاء
+          </button>
         </div>
       </form>
-
-      <!-- action buttons -->
-      <div class="flex justify-center gap-5 p-5 sticky bottom-0 bg-white border-t">
-        <button class="text-lg px-4 py-2 rounded bg-main text-white cursor-pointer">
-          {{ formDialog.type === 'edit' ? 'تحديث' : 'إضافة' }}
-        </button>
-
-        <button
-          type="button"
-          (click)="formDialog = null"
-          class="text-lg px-4 py-2 rounded bg-gray-400 text-white cursor-pointer"
-        >
-          إلغاء
-        </button>
-      </div>
     </div>
   </div>
 </div>
@@ -182,12 +172,43 @@
   <div class="bg-white rounded-xl shadow-xl w-auto p-7 z-10 min-w-[400px]">
     <p class="mb-7 text-xl font-bold text-center">هل أنت متأكد من الحذف؟</p>
     <div class="flex justify-center items-center gap-5 text-lg">
-      <button class="px-4 py-2 rounded bg-red-600 text-white cursor-pointer">متأكد</button>
+      <button
+        class="px-4 py-2 rounded bg-red-600 text-white cursor-pointer"
+        (click)="confirmDelete()"
+      >
+        متأكد
+      </button>
       <button
         class="px-4 py-2 rounded bg-gray-500 text-white cursor-pointer"
         (click)="deleteId = null"
       >
         إلغاء
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Result dialog -->
+<div *ngIf="resultDialog" class="fixed inset-0 z-50 flex items-center justify-center">
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true"></div>
+
+  <div class="bg-white rounded-2xl shadow-xl w-auto p-7 z-10 min-w-[400px] text-center">
+    <h3
+      class="text-xl font-bold"
+      [ngClass]="{
+        'text-green-600': resultDialog.type === 'success',
+        'text-red-600': resultDialog.type === 'error'
+      }"
+    >
+      {{ resultDialog.title }}
+    </h3>
+    <p class="my-5 text-lg">{{ resultDialog.message }}</p>
+    <div class="flex justify-center">
+      <button
+        (click)="resultDialog = null"
+        class="px-4 py-2 rounded bg-main text-white cursor-pointer"
+      >
+        حسناً
       </button>
     </div>
   </div>

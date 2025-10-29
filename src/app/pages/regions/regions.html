@@ -1,10 +1,12 @@
-<h2 class="bg-main text-white text-2xl font-bold text-center py-3 rounded-2xl mb-14">الصلاحيات</h2>
+<h2 class="bg-main text-white text-2xl font-bold text-center py-3 rounded-2xl mb-14">
+  قائمة المناطق
+</h2>
 
 <app-generic-table
   #genericTableComp
   [columns]="columns"
   [endpoints]="endpoints"
-  queryKey="roles"
+  queryKey="regions"
   [showCreateButton]="true"
   (create)="onCreate()"
 >
@@ -57,7 +59,7 @@
       <!-- header -->
       <div class="flex justify-between items-center border-b p-5 mb-5 bg-second text-white">
         <h3 class="text-xl font-semibold">
-          {{ formDialog.type === 'edit' ? 'تعديل بيانات الدور' : 'إضافة دور' }}
+          {{ formDialog.type === 'edit' ? 'تعديل بيانات المنطقة' : 'إضافة منطقة' }}
         </h3>
         <button
           (click)="formDialog = null"
@@ -69,11 +71,12 @@
       </div>
 
       <!-- form -->
+      <!-- ننفذ submit عبر (submit) ونمرر الحدث لأخذ values -->
       <form class="flex flex-col gap-4 px-10 py-7" (submit)="submitForm($event)">
         <div class="md:flex gap-5 md:mb-3">
           <div class="mb-4 md:mb-0 w-full">
             <label class="block mb-2 text-lg"
-              >اسم الدور<span class="text-red-500 mr-2">*</span></label
+              >اسم المنطقة<span class="text-red-500 mr-2">*</span></label
             >
             <input
               name="name"
@@ -83,77 +86,24 @@
             />
           </div>
         </div>
-
         <div class="md:flex gap-5 md:mb-3">
-          <div class="mb-4 md:mb-0 w-full relative">
-            <label class="block mb-2 text-lg">الصلاحيات</label>
-
-            <!-- pills (selected claims) -->
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span
-                *ngFor="let c of selectedClaims; let i = index"
-                class="flex items-center gap-2 py-1 px-3 rounded-full border bg-gray-100"
-              >
-                {{ c.display }}
-                <button
-                  type="button"
-                  class="ml-1 text-sm leading-none"
-                  (click)="removeClaim(i)"
-                  aria-label="حذف"
-                >
-                  ✕
-                </button>
-              </span>
-            </div>
-
-            <!-- fake input to open dropdown -->
-            <div
-              class="w-full border border-main p-2 rounded outline-0 cursor-pointer flex justify-between items-center"
-              (click)="toggleDropdown()"
-              (keydown.enter)="toggleDropdown()"
-              tabindex="0"
-              role="button"
-              aria-haspopup="listbox"
-              aria-expanded="{{ claimsDropdownOpen }}"
+          <div class="mb-4 md:mb-0 w-full">
+            <label class="block mb-2 text-lg"
+              >الإدارة التابعة لها<span class="text-red-500 mr-2">*</span></label
             >
-              <span *ngIf="selectedClaims.length === 0" class="text-gray-500">اختر صلاحيات...</span>
-              <span *ngIf="selectedClaims.length > 0"
-                >{{ selectedClaims.length }} مُختار(ـ/ين)</span
-              >
-              <span class="text-lg">▾</span>
-            </div>
-
-            <!-- dropdown list -->
-            <ul
-              *ngIf="claimsDropdownOpen"
-              class="absolute left-0 right-0 max-h-56 overflow-auto mt-1 bg-white border rounded z-50"
-              role="listbox"
+            <select
+              name="administrationId"
+              class="w-full border border-main p-2 rounded outline-0"
+              required
             >
-              <li
-                *ngFor="let claim of allClaims"
-                class="p-3 cursor-pointer hover:bg-gray-100 flex justify-between items-center"
-                (click)="toggleClaim(claim)"
-                [attr.aria-selected]="isSelected(claim)"
+              <option
+                *ngFor="let admin of administrations"
+                [value]="admin.id"
+                [selected]="formDialog.data?.administrationId === admin.id"
               >
-                <div>
-                  <div class="font-medium">{{ claim.display }}</div>
-                  <div class="text-xs text-gray-500">{{ claim.value }}</div>
-                </div>
-
-                <input
-                  type="checkbox"
-                  [checked]="isSelected(claim)"
-                  (click)="$event.stopPropagation()"
-                />
-              </li>
-
-              <li *ngIf="allClaims.length === 0" class="p-3 text-center text-gray-500">
-                لا توجد صلاحيات
-              </li>
-            </ul>
-
-            <!-- optional hidden input (not required if building payload manually) -->
-            <!-- <input type="hidden" name="claims" [value]="selectedClaims.map(c => c.value).join(',')" /> -->
+                {{ admin.name }}
+              </option>
+            </select>
           </div>
         </div>
 

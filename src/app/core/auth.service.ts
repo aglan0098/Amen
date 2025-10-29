@@ -7,8 +7,23 @@ interface AuthResponse {
   isSuccess: boolean;
   errorTitle: string | null;
   errorContent: string | null;
-  jwt: any;
-  object: { token?: string; expiresInDateTime?: string; createDateTime?: string } | null;
+  data: {
+    token: string;
+    tokenExpiresDateTime: string;
+    tokenCreateDateTime: string;
+    userClaims: any[];
+    roles: string[];
+    roleClaims: string[];
+    user: {
+      id: string;
+      userName: string;
+      email: string;
+      nationalId: string | null;
+      roles: string | null;
+      claims: any[] | null;
+      createDateTime: string | null;
+    };
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -40,17 +55,18 @@ export class AuthService {
 
     return this.http.post<AuthResponse>(url, payload).pipe(
       map((res) => {
-        if (!res || !res.isSuccess || !res.object || !res.object.token) {
+        if (!res || !res.isSuccess || !res.data || !res.data.token) {
           // error handling
           const msg = res?.errorContent || 'Authentication failed';
           throw new Error(msg);
         }
-        return res.object;
+        return res.data; // هنا رجعنا data مش object
       }),
-      tap((obj) => {
-        sessionStorage.setItem(this.TOKEN_KEY, obj.token!);
-        if (obj.expiresInDateTime) {
-          sessionStorage.setItem(this.TOKEN_EXPIRES_KEY, obj.expiresInDateTime);
+      tap((data) => {
+        sessionStorage.setItem(this.TOKEN_KEY, data.token);
+        sessionStorage.setItem(this.APP_USER, JSON.stringify(data.user));
+        if (data.tokenExpiresDateTime) {
+          sessionStorage.setItem(this.TOKEN_EXPIRES_KEY, data.tokenExpiresDateTime);
         } else {
           sessionStorage.removeItem(this.TOKEN_EXPIRES_KEY);
         }

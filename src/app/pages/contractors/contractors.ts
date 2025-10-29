@@ -8,13 +8,13 @@ import { GenericTableComponent } from '../../shared/table/generic-table/generic-
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-roles',
+  selector: 'app-contractors',
   standalone: true,
   imports: [CommonModule, GenericTableComponent, MatIconModule],
-  templateUrl: './roles.html',
-  styleUrl: './roles.css',
+  templateUrl: './contractors.html',
+  styleUrl: './contractors.css',
 })
-export class Roles implements OnInit {
+export class Contractors implements OnInit {
   @ViewChild('actionsTemplate', { static: true }) actionsTemplate!: TemplateRef<any>;
   @ViewChild('genericTableComp', { static: false }) genericTableComp!: GenericTableComponent;
 
@@ -28,134 +28,56 @@ export class Roles implements OnInit {
   // result dialog for success/fail messages
   resultDialog: null | { title: string; message: string; type?: 'success' | 'error' } = null;
 
-  // endpoints
+  // endpoints for this page
   endpoints = {
-    list: '/Roles/GetAll',
-    create: '/Roles/Create',
-    update: '/Roles/Update',
-    delete: '/Roles/Delete',
+    list: '/Contractors/GetAll',
+    create: '/Contractors/Create',
+    update: '/Contractors/Update',
+    delete: '/Contractors/Delete',
   };
-
-  // claims related
-  allClaims: Array<{ value: string; display: string }> = [];
-  selectedClaims: Array<{ value: string; display: string }> = [];
-  claimsDropdownOpen = false;
 
   constructor(private api: ApiService, private tableData: TableDataService) {}
 
   ngOnInit() {
     this.columns = [
       { key: 'id', label: 'رقم' },
-      { key: 'name', label: 'الدور' },
-      { key: 'claims', label: 'الصلاحيات' },
+      { key: 'nationalId', label: 'رقم الهوية' },
+      { key: 'fullName', label: 'الأسم' },
       { key: 'actions', label: 'اتخاذ إجراء', template: this.actionsTemplate },
     ];
-
-    this.fetchClaims();
   }
 
-  // fetch all claims
-  async fetchClaims() {
-    try {
-      const res = await firstValueFrom(this.api.getFromEndpoint<any>('/Roles/GetAllClaims'));
-      this.allClaims = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
-    } catch (err) {
-      console.error('fetchClaims failed (GET)', err);
-
-      try {
-        const postRes = await firstValueFrom(
-          this.api.postToEndpoint<any>('/Roles/GetAllClaims', null)
-        );
-        this.allClaims = Array.isArray(postRes)
-          ? postRes
-          : Array.isArray(postRes?.data)
-          ? postRes.data
-          : [];
-      } catch (err2) {
-        console.error('fetchClaims fallback failed', err2);
-        this.allClaims = [];
-      }
-    }
-  }
-
-  // open create dialog
+  // create button handler
   onCreate() {
-    this.selectedClaims = [];
     this.formDialog = { type: 'create' };
     this.openMenuId = null;
   }
 
-  // open edit dialog with current data
   openEdit(row: any) {
     const data = {
       id: row.id ?? row._id,
-      name: row.name,
-      claims: row.claims ?? [],
+      nationalId: row.nationalId,
+      fullName: row.fullName,
     };
-
-    // تحويل claims الموجودة إلى objects مع عرض مناسب
-    if (Array.isArray(data.claims)) {
-      this.selectedClaims = data.claims.map((c: any) => {
-        if (typeof c === 'string') {
-          const found = this.allClaims.find((ac) => ac.value === c);
-          return found ?? { value: c, display: c };
-        } else if (c && c.value) {
-          return c;
-        } else {
-          return { value: String(c), display: String(c) };
-        }
-      });
-    } else {
-      this.selectedClaims = [];
-    }
-
     this.formDialog = { type: 'edit', data };
   }
 
-  // ============ claims selection logic ========
-  // dropdown helpers
-  toggleDropdown() {
-    this.claimsDropdownOpen = !this.claimsDropdownOpen;
-  }
-
-  isSelected(claim: { value: string; display: string }) {
-    return this.selectedClaims.some((c) => c.value === claim.value);
-  }
-
-  toggleClaim(claim: { value: string; display: string }) {
-    const idx = this.selectedClaims.findIndex((c) => c.value === claim.value);
-    if (idx === -1) {
-      this.selectedClaims.push(claim);
-    } else {
-      this.selectedClaims.splice(idx, 1);
-    }
-  }
-
-  removeClaim(index: number) {
-    this.selectedClaims.splice(index, 1);
-  }
-
-  // handle submit
+  // submit form handler
   async submitForm(ev: Event) {
     ev.preventDefault();
     const formEl = ev.target as HTMLFormElement;
     if (!formEl) return;
 
     const fd = new FormData(formEl);
-    const nameVal = String(fd.get('name') ?? '');
-
     // build payload matching API contract
     const payload: any = {
-      name: nameVal,
-      claims: this.selectedClaims.map((c) => c.value),
+      nationalId: String(fd.get('nationalId') ?? fd.get('nationalId') ?? ''),
+      fullName: String(fd.get('fullName') ?? fd.get('fullName') ?? ''),
     };
 
+    // if editing, include id
     if (this.formDialog?.type === 'edit') {
       payload.id = this.formDialog.data?.id;
-      payload.newName = payload.name;
-      payload.newClaims = payload.claims;
-      delete payload.name;
-      delete payload.claims;
     }
 
     try {
@@ -164,7 +86,7 @@ export class Roles implements OnInit {
         if (res?.isSuccess) {
           this.resultDialog = {
             title: 'تمت الإضافة',
-            message: 'تم إضافة الدور بنجاح',
+            message: 'تم إضافة المتعاقد بنجاح',
             type: 'success',
           };
         } else {
@@ -179,7 +101,7 @@ export class Roles implements OnInit {
         if (res?.isSuccess) {
           this.resultDialog = {
             title: 'تم التحديث',
-            message: 'تم تحديث بيانات الدور',
+            message: 'تم تحديث بيانات المتعاقد',
             type: 'success',
           };
         } else {
@@ -197,17 +119,12 @@ export class Roles implements OnInit {
         type: 'error',
       };
     } finally {
-      // close form and reload table
       this.formDialog = null;
-      this.tableData.invalidate('roles');
+      this.tableData.invalidate('contractors');
       try {
         this.genericTableComp?.reloadCurrentParams();
       } catch (e) {}
       setTimeout(() => (this.resultDialog = null), 2500);
-
-      // reset selection to avoid carry-over next time
-      this.selectedClaims = [];
-      this.claimsDropdownOpen = false;
     }
   }
 
@@ -218,7 +135,11 @@ export class Roles implements OnInit {
       const idStr = String(this.deleteId);
       const res = await firstValueFrom(this.api.deleteById(this.endpoints.delete, idStr));
       if (res?.isSuccess) {
-        this.resultDialog = { title: 'تم الحذف', message: 'تم حذف السجل بنجاح', type: 'success' };
+        this.resultDialog = {
+          title: 'تم الحذف',
+          message: 'تم حذف المتعاقد بنجاح',
+          type: 'success',
+        };
       } else {
         this.resultDialog = {
           title: 'فشل الحذف',
@@ -234,7 +155,7 @@ export class Roles implements OnInit {
       };
     } finally {
       this.deleteId = null;
-      this.tableData.invalidate('roles');
+      this.tableData.invalidate('contractors');
       setTimeout(() => (this.resultDialog = null), 2500);
     }
   }

@@ -10,50 +10,42 @@ import { Footer } from '../components/footer/footer';
   standalone: true,
   imports: [CommonModule, RouterModule, Sidebar, Navbar, Footer],
   templateUrl: './dashboard-layout.html',
+  styleUrls: ['./dashboard-layout.css'],
 })
 export class DashboardLayout {
-  // -------------------------
-  // حالة الـ sidebar (Angular signal)
-  // -------------------------
   isSidebarOpen = signal(false);
 
-  // -------------------------
-  // نصوص الكلاسات الجاهزة للاستعمال في [ngClass]
-  // لأننا نحتاج تغيير سلوك الـ sidebar بين open/closed و بين small/lg.
-  // هذا يسهل القراءة والصيانة بدل تكوين سترينج في الـ template.
-  // -------------------------
-  // عندما يكون الـ sidebar مفتوح:
-  // - على small: fixed overlay translate-x-0 (ظاهر)
-  // - على lg: يكون جزء من الـ flow (static/relative) وبالتالي الـ main يجلس بجانبه مباشرة
-  readonly openSidebarClasses =
-    'translate-x-0 fixed right-0 top-0 h-full w-64 lg:relative lg:translate-x-0 lg:static';
+  windowWidth = window.innerWidth;
 
-  // عندما يكون الـ sidebar مغلق:
-  // - على small: fixed ومترجم خارج الشاشة (translate-x-full) -> overlay يختفي
-  // - على lg: نجعله absolute وننزله خارج الشاشة (translate-x-full) ليُزال من الـ flow
+  readonly sidebarWidthClass = 'w-64 no-scrollbar';
+
+  readonly openSidebarClasses =
+    'translate-x-0 fixed right-0 top-0 h-full overflow-y-auto bg-white z-50 transition-transform duration-300 ' +
+    'lg:translate-x-0 lg:fixed lg:top-0 lg:right-0 lg:h-screen lg:overflow-y-auto' +
+    this.sidebarWidthClass;
+
   readonly closedSidebarClasses =
-    'translate-x-full fixed right-0 top-0 h-full w-64 lg:absolute lg:translate-x-full lg:right-0 lg:top-0';
+    'translate-x-full fixed right-0 top-0 h-full overflow-y-auto bg-white z-50 transition-transform duration-300 ' +
+    'lg:translate-x-full lg:fixed lg:top-0 lg:right-0 lg:h-screen lg:overflow-y-auto ' +
+    this.sidebarWidthClass;
 
   constructor() {
-    // عند التهيئة، نحدد الحالة حسب حجم الشاشة (لو الشاشة كبيرة: نفتح sidebar تلقائياً)
-    this.setSidebarState(window.innerWidth);
+    this.setSidebarState(this.windowWidth);
   }
 
-  // تبديل حالة الـ sidebar عند الضغط على الزرار
   toggleSidebar() {
     this.isSidebarOpen.update((open) => !open);
   }
 
-  // وضع الحالة حسب عرض الشاشة (نستخدم 1024px كـ breakpoint لـ lg)
   private setSidebarState(width: number) {
     const largeScreen = width >= 1024;
     this.isSidebarOpen.set(largeScreen);
   }
 
-  // نراقب تغيّر الحجم ونحدث الحالة تلقائياً
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     const target = event.target as Window;
+    this.windowWidth = target.innerWidth;
     this.setSidebarState(target.innerWidth);
   }
 }

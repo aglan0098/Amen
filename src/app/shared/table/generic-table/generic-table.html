@@ -16,7 +16,7 @@
   </div>
 
   <ng-container *ngIf="data$ | async as data; else loading">
-    <app-table [columns]="columns" [rows]="data.data"></app-table>
+    <app-table [columns]="columns" [rows]="data?.data || []"></app-table>
     <div *ngIf="isFetching && !isLoading" class="text-sm mt-2">تحديث...</div>
 
     <div class="mt-4">
